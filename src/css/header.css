@@ -42,3 +42,12 @@
 .nav-link.active::after {
   background: #747bff;
 }
+
+.main-title-gradient {
+  display: block;
+  font-size: 36pt;
+  background-image: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
