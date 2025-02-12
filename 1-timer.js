@@ -1,0 +1,4 @@
+import"./assets/modulepreload-polyfill-B5Qt9EMX.js";/* empty css                      */import{f as t,i as o}from"./assets/vendor-BbbuE1sJ.js";//!==================================================
+document.querySelector("[data-start]"),document.querySelector(".timer"),document.querySelector("[data-days]"),document.querySelector("[data-hours]"),document.querySelector("[data-minutes]"),document.querySelector("[data-seconds]"),document.querySelector("#datetime-picker");//!==================================================
+const r={enableTime:!0,time_24hr:!0,defaultDate:new Date,minuteIncrement:1,onClose(e){e[0]<new Date&&o.error({title:"Error",message:"Illegal operation",iconColor:"#fff",titleColor:"#fff",messageColor:"#fff",backgroundColor:"#EF4040",position:"topRight",transitionIn:"flipInX"})}};t("#datetime-picker",r);
+//# sourceMappingURL=1-timer.js.map
