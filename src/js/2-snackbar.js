@@ -28,14 +28,17 @@ refs.formElem.addEventListener('submit', e => {
   promis
     .then(delay => {
       iziToast.success({
+        title: 'OK',
         message: `✅ Fulfilled promise in ${delay}ms`,
-        position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+        position: 'topRight',
       });
     })
     .catch(delay => {
       iziToast.error({
+        title: 'Error',
         message: `❌ Rejected promise in ${delay}ms`,
-        position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+        position: 'topRight',
+        class: 'js-success-toast',
       });
     });
 });
