@@ -1,20 +1,107 @@
-#datetime-picker,
-button {
-  margin-bottom: 20px;
+#datetime-picker {
+  box-sizing: border-box;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  width: 272px;
+  height: 40px;
+  padding: 8px 16px;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
 }
+
+#datetime-picker:focus,
+#datetime-picker:hover,
+#datetime-picker:active {
+  border-color: #000000;
+  outline: none;
+}
+
+#datetime-picker:disabled {
+  color: #808080;
+  border-color: #808080;
+  background-color: #fafafa;
+  outline: none;
+}
+
+button {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 75px;
+  height: 40px;
+  background-color: #4e75ff;
+}
+button:disabled {
+  background-color: #cfcfcf;
+  color: #989898;
+}
+/* button:hover,
+button:focus {
+  background-color: #6c8cff;
+  color: #fff;
+}
+button:active {
+  transform: translateY(1px);
+} */
+
+button:not(:disabled):hover,
+button:not(:disabled):focus {
+  background-color: #6c8cff;
+  color: #fff;
+}
+
 .timer {
+  margin: 0 auto;
   display: flex;
-  margin-top: 30px;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 10px;
+  text-align: center;
 }
 
-.timer .value {
-  font-size: 2em;
-  font-weight: bold;
+.value {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
 }
+
+.label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #2e2f42;
+}
+
+/* ============== KALENDER ====================== */
+
+/* .flatpickr-calendar {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+}
+
+.custom-flatpickr .flatpickr-day.today {
+  border: 1px solid #4e75ff;
+}
+
+.custom-flatpickr .flatpickr-day.selected {
+  background: #4e75ff;
+  color: white;
+} */
