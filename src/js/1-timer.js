@@ -1,6 +1,5 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
@@ -15,7 +14,21 @@ const refs = {
   input: document.querySelector('#datetime-picker'),
 };
 
+refs.btn.disabled = true;
+let userSelectedDate = null;
+
 //!==================================================
+
+const toastOptions = {
+  titleColor: '#fff',
+  titleSize: '16px',
+  messageColor: '#fff',
+  messageSize: '16px',
+  position: 'topRight',
+  transitionIn: 'flipInX',
+  timeout: 2000,
+  closeOnClick: true,
+};
 
 function convertMs(ms) {
   const second = 1000;
@@ -30,12 +43,10 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
-// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
-let userSelectedDate = null;
-refs.btn.disabled = true;
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
 
 const options = {
   enableTime: true,
@@ -45,83 +56,118 @@ const options = {
   onReady(selectedDates, dateStr, instance) {
     instance.calendarContainer.style.backgroundColor = '#f0f0f0';
   },
+
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0];
     if (userSelectedDate < new Date()) {
-      iziToast.error({
-        title: 'Oops...',
-        message: 'the day is in the past',
-        iconColor: '#fff',
-        titleColor: '#fff',
-        messageColor: '#fff',
+      iziToast.show({
+        ...toastOptions,
+        title: 'Error',
+        message: 'Please choose a date in the future',
         backgroundColor: '#EF4040',
-        position: 'topRight',
-        transitionIn: 'flipInX',
       });
       refs.btn.disabled = true;
     } else {
+      iziToast.show({
+        ...toastOptions,
+        title: 'Ok',
+        message: 'The timer is set and ready to start',
+        color: '#59A10D',
+      });
       refs.btn.disabled = false;
     }
   },
 };
-
 const calender = flatpickr(refs.input, options);
 
-const countdownTimer = {
-  intervalID: null,
+let intervalID = null;
 
-  start() {
-    clearInterval(this.intervalID);
+function startTimer() {
+  refs.btn.disabled = true;
+  refs.input.disabled = true;
 
-    refs.btn.disabled = true;
-    refs.input.disabled = true;
+  intervalID = setInterval(() => {
+    const currentTime = new Date();
+    let diff = userSelectedDate - currentTime;
 
-    this.intervalID = setInterval(() => {
-      const currentTime = new Date();
-      const diff = userSelectedDate - currentTime;
+    if (diff <= 0) {
+      clearInterval(intervalID);
+      updateTimerDisplay(0);
+      refs.btn.disabled = false;
+      refs.input.disabled = false;
 
-      if (diff <= 0) {
-        clearInterval(this.intervalID);
-        diff = 0;
-        refs.btn.disabled = true;
-        refs.input.disabled = false;
+      iziToast.show({
+        ...toastOptions,
+        message: 'Time is up!',
+        color: '#59A10D',
+      });
+    }
+    updateTimerDisplay(diff);
+  }, 1000);
+}
 
-        iziToast.success({
-          message: 'Time is up!',
-          iconColor: '#fff',
-          titleColor: '#fff',
-          messageColor: '#fff',
-          backgroundColor: '#94D5DB',
-          position: 'topRight',
-          transitionIn: 'flipInX',
-        });
-      }
-      this.displayTimeLeft(diff);
-    }, 1000);
-    iziToast.info({
-      message: 'Timer started!',
-      iconColor: '#fff',
-      titleColor: '#fff',
-      messageColor: '#fff',
-      backgroundColor: '#89C757',
-      position: 'topRight',
-      transitionIn: 'flipInX',
-    });
-  },
-
-  displayTimeLeft(diff) {
-    const { days, hours, minutes, seconds } = convertMs(diff);
-    refs.days.textContent = this.addLeadingZero(days);
-    refs.hours.textContent = this.addLeadingZero(hours);
-    refs.minutes.textContent = this.addLeadingZero(minutes);
-    refs.seconds.textContent = this.addLeadingZero(seconds);
-  },
-
-  addLeadingZero(value) {
-    return String(value).padStart(2, '0');
-  },
-};
+function updateTimerDisplay(diff) {
+  const { days, hours, minutes, seconds } = convertMs(diff);
+  refs.days.textContent = addLeadingZero(days);
+  refs.hours.textContent = addLeadingZero(hours);
+  refs.minutes.textContent = addLeadingZero(minutes);
+  refs.seconds.textContent = addLeadingZero(seconds);
+}
 
 refs.btn.addEventListener('click', () => {
-  countdownTimer.start();
+  if (userSelectedDate && userSelectedDate > new Date()) {
+    startTimer(userSelectedDate);
+  }
 });
+
+//!==================================================
+
+// const countdownTimer = {
+//   intervalID: null,
+
+//   start() {
+//     clearInterval(this.intervalID);
+
+//     refs.btn.disabled = true;
+//     refs.input.disabled = true;
+
+//     this.intervalID = setInterval(() => {
+//       const currentTime = new Date();
+//       let diff = userSelectedDate - currentTime;
+
+//       if (diff <= 0) {
+//         clearInterval(this.intervalID);
+//         diff = 0;
+//         refs.btn.disabled = true;
+//         refs.input.disabled = false;
+
+//         iziToast.success({
+//           message: 'Time is up!',
+//           iconColor: '#fff',
+//           titleColor: '#fff',
+//           messageColor: '#fff',
+//           backgroundColor: '#94D5DB',
+//           position: 'topRight',
+//           transitionIn: 'flipInX',
+//         });
+//       }
+//       this.displayTimeLeft(diff);
+//     }, 1000);
+//   },
+
+//   displayTimeLeft(diff) {
+//     const { days, hours, minutes, seconds } = convertMs(diff);
+//     refs.days.textContent = this.addLeadingZero(days);
+//     refs.hours.textContent = this.addLeadingZero(hours);
+//     refs.minutes.textContent = this.addLeadingZero(minutes);
+//     refs.seconds.textContent = this.addLeadingZero(seconds);
+//   },
+
+//   addLeadingZero(value) {
+//     return String(value).padStart(2, '0');
+//   },
+// };
+
+// refs.btn.addEventListener('click', () => {
+//   countdownTimer.start();
+// });
