@@ -58,7 +58,7 @@ const options = {
   },
 
   onClose(selectedDates) {
-    userSelectedDate = selectedDates[0];
+    userSelectedDate = selectedDates[0].getTime();
     if (userSelectedDate < new Date()) {
       iziToast.show({
         ...toastOptions,
@@ -82,7 +82,7 @@ const calender = flatpickr(refs.input, options);
 
 let intervalID = null;
 
-function startTimer() {
+function startTimer(userSelectedDate) {
   refs.btn.disabled = true;
   refs.input.disabled = true;
 
@@ -92,8 +92,8 @@ function startTimer() {
 
     if (diff <= 0) {
       clearInterval(intervalID);
-      updateTimerDisplay(0);
-      refs.btn.disabled = false;
+      diff = 0;
+      refs.btn.disabled = true;
       refs.input.disabled = false;
 
       iziToast.show({
@@ -119,55 +119,3 @@ refs.btn.addEventListener('click', () => {
     startTimer(userSelectedDate);
   }
 });
-
-//!==================================================
-
-// const countdownTimer = {
-//   intervalID: null,
-
-//   start() {
-//     clearInterval(this.intervalID);
-
-//     refs.btn.disabled = true;
-//     refs.input.disabled = true;
-
-//     this.intervalID = setInterval(() => {
-//       const currentTime = new Date();
-//       let diff = userSelectedDate - currentTime;
-
-//       if (diff <= 0) {
-//         clearInterval(this.intervalID);
-//         diff = 0;
-//         refs.btn.disabled = true;
-//         refs.input.disabled = false;
-
-//         iziToast.success({
-//           message: 'Time is up!',
-//           iconColor: '#fff',
-//           titleColor: '#fff',
-//           messageColor: '#fff',
-//           backgroundColor: '#94D5DB',
-//           position: 'topRight',
-//           transitionIn: 'flipInX',
-//         });
-//       }
-//       this.displayTimeLeft(diff);
-//     }, 1000);
-//   },
-
-//   displayTimeLeft(diff) {
-//     const { days, hours, minutes, seconds } = convertMs(diff);
-//     refs.days.textContent = this.addLeadingZero(days);
-//     refs.hours.textContent = this.addLeadingZero(hours);
-//     refs.minutes.textContent = this.addLeadingZero(minutes);
-//     refs.seconds.textContent = this.addLeadingZero(seconds);
-//   },
-
-//   addLeadingZero(value) {
-//     return String(value).padStart(2, '0');
-//   },
-// };
-
-// refs.btn.addEventListener('click', () => {
-//   countdownTimer.start();
-// });
